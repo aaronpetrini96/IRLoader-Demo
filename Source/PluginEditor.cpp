@@ -15,7 +15,15 @@ IRLoaderDemoAudioProcessorEditor::IRLoaderDemoAudioProcessorEditor (IRLoaderDemo
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    
+    addAndMakeVisible(loadBtn);
+    loadBtn.setButtonText("Load IR");
+    loadBtn.onClick = [this]()
+    {
+        
+    };
+    
+    setSize (600, 400);
 }
 
 IRLoaderDemoAudioProcessorEditor::~IRLoaderDemoAudioProcessorEditor()
@@ -26,15 +34,16 @@ IRLoaderDemoAudioProcessorEditor::~IRLoaderDemoAudioProcessorEditor()
 void IRLoaderDemoAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.35f), getHeight(), juce::Colour::fromRGB(40, 42, 53).brighter(0.02), getHeight()*0.4));
+    g.fillRect(getLocalBounds());
 }
 
 void IRLoaderDemoAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    const auto btnX = getWidth() * 0.35;
+    const auto btnY = getHeight()* 0.5;
+    const auto btnWidth = getWidth() * 0.15;
+    const auto btnHeight = btnWidth * 0.5;
+    
+    loadBtn.setBounds(btnX, btnY, btnWidth, btnHeight);
 }

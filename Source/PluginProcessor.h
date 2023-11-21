@@ -55,5 +55,7 @@ public:
 
 private:
     //==============================================================================
+    juce::dsp::ProcessSpec spec;
+    juce::dsp::Convolution irLoader;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IRLoaderDemoAudioProcessor)
 };
