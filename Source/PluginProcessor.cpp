@@ -216,10 +216,9 @@ void IRLoaderDemoAudioProcessor::setStateInformation (const void* data, int size
         savedFile = juce::File(variableTree.getProperty("root"));
         
         
-        if(savedFile.existsAsFile())
-        {
+        
             irLoader.loadImpulseResponse(savedFile, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes,0);
-        }
+        
     }
 }
 

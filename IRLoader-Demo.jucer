@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="l18lhI" name="IRLoader-Demo" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="Aaron Petrini">
   <MAINGROUP id="q9XakT" name="IRLoader-Demo">
     <GROUP id="{F5277620-750E-3965-58A3-5AC8F2F6011B}" name="Source">
       <FILE id="NiyV7l" name="PluginProcessor.cpp" compile="1" resource="0"
