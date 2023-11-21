@@ -20,12 +20,38 @@ IRLoaderDemoAudioProcessor::IRLoaderDemoAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        )
+, treeState (*this,nullptr,"PARAMETERS", createParameterLayout())
 #endif
 {
+    variableTree = {
+        "Variables", {},
+        {
+            {"Group",{{"name","IR Vars"}},
+                {
+                    {"Parameter",{{"id","file1"},{"value","/"}}},
+                    {"Parameter",{{"id","root"},{"value","/"}}}
+                }
+            }
+        }
+    };
 }
 
 IRLoaderDemoAudioProcessor::~IRLoaderDemoAudioProcessor()
 {
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout IRLoaderDemoAudioProcessor::createParameterLayout()
+{
+    std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
+  
+        
+   
+    return {params.begin(),params.end()};
+}
+
+void IRLoaderDemoAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
+{
+    
 }
 
 //==============================================================================
@@ -99,6 +125,8 @@ void IRLoaderDemoAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     
     irLoader.reset();
     irLoader.prepare(spec);
+    
+
  
 }
 
@@ -142,10 +170,10 @@ void IRLoaderDemoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
 
     juce::dsp::AudioBlock<float> block {buffer};
-    if (irLoader.getCurrentIRSize()>0){
-       
-        irLoader.process(juce::dsp::ProcessContextReplacing<float>(block));
-            }
+    if (irLoader.getCurrentIRSize()>0)
+    {
+          irLoader.process(juce::dsp::ProcessContextReplacing<float>(block));
+    }
     
 }
 
@@ -166,12 +194,33 @@ void IRLoaderDemoAudioProcessor::getStateInformation (juce::MemoryBlock& destDat
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    
+    treeState.state.appendChild(variableTree, nullptr);
+    juce::MemoryOutputStream stream(destData, false);
+    treeState.state.writeToStream (stream);
 }
 
 void IRLoaderDemoAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    
+    auto tree = juce::ValueTree::readFromData(data, size_t (sizeInBytes));
+    variableTree = tree.getChildWithName("Variables");
+
+    if(tree.isValid())
+    {
+        treeState.state = tree;
+        
+        savedFile = juce::File(variableTree.getProperty("file1"));
+        savedFile = juce::File(variableTree.getProperty("root"));
+        
+        
+        if(savedFile.existsAsFile())
+        {
+            irLoader.loadImpulseResponse(savedFile, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes,0);
+        }
+    }
 }
 
 //==============================================================================

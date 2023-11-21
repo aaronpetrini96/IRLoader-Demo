@@ -30,6 +30,8 @@ private:
     IRLoaderDemoAudioProcessor& audioProcessor;
     
     juce::TextButton loadBtn;
+    std::unique_ptr<juce::FileChooser> fileChooser;
+    juce::Label irName;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IRLoaderDemoAudioProcessorEditor)
 };

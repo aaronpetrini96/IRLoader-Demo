@@ -13,7 +13,8 @@
 //==============================================================================
 /**
 */
-class IRLoaderDemoAudioProcessor  : public juce::AudioProcessor
+class IRLoaderDemoAudioProcessor  : public juce::AudioProcessor,
+juce::AudioProcessorValueTreeState::Listener
 {
 public:
     //==============================================================================
@@ -52,10 +53,18 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-
+    
+    juce::AudioProcessorValueTreeState treeState;
+    juce::ValueTree variableTree;
+    
+    juce::File root, savedFile;
+    juce::dsp::Convolution irLoader;
+    
+    
 private:
     //==============================================================================
     juce::dsp::ProcessSpec spec;
-    juce::dsp::Convolution irLoader;
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    void parameterChanged (const juce::String& parameterId, float newValue) override;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IRLoaderDemoAudioProcessor)
 };
